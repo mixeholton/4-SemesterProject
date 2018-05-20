@@ -22,6 +22,8 @@ int middleSensor = 2;
 int ringSensor = 3;
 int pinkySensor = 4;
 
+const int NUM_FINGERS = 5;
+
 bool finger0 = 0;
 bool finger1 = 0;
 bool finger2 = 0;
@@ -31,8 +33,8 @@ bool finger4 = 0;
 int fingers[] = {finger0, finger1, finger2, finger3, finger4};
 
 // Kan ikke fastsættes pga. forskellige håndstørrelse,
-// så den skal laves om senere.... nu er den bare 15
-int sensorTreshold = 15;
+// så den skal laves om senere.... nu er den bare 580
+int sensorTreshold = 580;
 
 int sum;
 
@@ -50,6 +52,8 @@ void setup() {
   middle.begin();
   ring.begin();
   pinky.begin();
+
+//  sensorTreshold = analogRead(indexSensor);
 }
 
 void loop() {
@@ -60,8 +64,9 @@ void loop() {
   // Read the analog pins
   for (int i = 0; i < NUM_FINGERS ; i++) {
     // bestem hvad der er on eller off
-    Serial.println(analogRead(i));
-    if (analogRead(i) > sensorTreshold) {
+    Serial.println("analogs: ");
+    Serial.println(analogRead(1));
+    if (analogRead(i) < sensorTreshold) {
       fingers[i] = 0;
     }
     else {
@@ -69,50 +74,27 @@ void loop() {
     }
     // holder styr på hvor mange fingre der er tændte, men ikke hvilke.
     sum += fingers[i];
+    Serial.print("Treshold:");
+    Serial.println(sensorTreshold);
   }
 
   //---------------------------------
 
   for (int i = 0; i < NUMPIXELS; i ++) {
 
-
+    if (fingers[1] == true) {
+      redColor = 0;
+      greenColor = 0;
+      blueColor = 0;
+    } else {
+      redColor = 255;
+      greenColor = 0;
+      blueColor = 0;
+    }
+    index.setPixelColor(i, redColor, greenColor, blueColor);
+    index.show();
 
   }
-  if (thumbState > sensorTreshold ) {
-    redColor = 127;
-    greenColor = 127;
-    blueColor = 0;
-  } else {
-    redColor = 255;
-    greenColor = 0;
-    blueColor = 0;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    ......
-  }
-  index.setPixelColor(0, redColor, greenColor, blueColor);
-  index.show();
   // indexfinger on/off
   //  if (indexState > sensorTreshold ) {
   //    int redColor = 255;
@@ -129,29 +111,29 @@ void loop() {
   //
   //  }
 
-  if (middleState > sensorTreshold ) {
-    int redColor = 0;
-    int greenColor = 255;
-    int blueColor = 0;
-    middle.setPixelColor(0, redColor, greenColor, blueColor);
-    middle.show();
-  }
-  if (ringState > sensorTreshold ) {
-    int redColor = 0;
-    int greenColor = 0;
-    int blueColor = 255;
-    ring.setPixelColor(0, redColor, greenColor, blueColor);
-    ring.show();
-  }
-  if (pinkyState > sensorTreshold ) {
-    int redColor = 255;
-    int greenColor = 255;
-    int blueColor = 255;
-    pinky.setPixelColor(0, redColor, greenColor, blueColor);
-    pinky.show();
-  }
+  //  if (middleState > sensorTreshold ) {
+  //    int redColor = 0;
+  //    int greenColor = 255;
+  //    int blueColor = 0;
+  //    middle.setPixelColor(0, redColor, greenColor, blueColor);
+  //    middle.show();
+  //  }
+  //  if (ringState > sensorTreshold ) {
+  //    int redColor = 0;
+  //    int greenColor = 0;
+  //    int blueColor = 255;
+  //    ring.setPixelColor(0, redColor, greenColor, blueColor);
+  //    ring.show();
+  //  }
+  //  if (pinkyState > sensorTreshold ) {
+  //    int redColor = 255;
+  //    int greenColor = 255;
+  //    int blueColor = 255;
+  //    pinky.setPixelColor(0, redColor, greenColor, blueColor);
+  //    pinky.show();
+  //  }
 
-  if (thumbState > sensorTreshold) {}
+  //  if (thumbState > sensorTreshold) {}
 
 
 
