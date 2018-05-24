@@ -2,10 +2,10 @@
 #include <Adafruit_NeoPixel.h>
 #define NUMPIXELS      3 // number of neopixels in strip
 
-int indexPin = 6;
-int middlePin = 7;
-int ringPin = 8;
-int pinkyPin = 9;
+int indexPin = 5;
+int middlePin = 4;
+int ringPin = 3;
+int pinkyPin = 2;
 
 // Adafruit class for a neopixles
 Adafruit_NeoPixel index = Adafruit_NeoPixel(NUMPIXELS, indexPin, NEO_GRB + NEO_KHZ800);
@@ -43,7 +43,10 @@ int test[4][3] = {
 // Kan ikke fastsættes pga. forskellige håndstørrelse,
 // så den skal laves om senere.... nu er den bare 580
 
-int sensorTreshold = 580;
+int sensorTresholdIndex;
+int sensorTresholdMiddle;
+int sensorTresholdRing;
+int sensorTresholdPinky;
 
 //-----------------------------
 
@@ -54,13 +57,18 @@ long blueColor;
 
 
 void setup() {
+
   Serial.begin(9600);
   index.begin();
   middle.begin();
   ring.begin();
   pinky.begin();
 
-  //  sensorTreshold = analogRead(indexSensor);
+  sensorTresholdIndex = analogRead(indexSensor);
+  sensorTresholdMiddle = analogRead(middleSensor);
+  sensorTresholdRing = analogRead(ringSensor);
+  sensorTresholdPinky = analogRead(pinkySensor);
+
 }
 
 void loop() {
@@ -71,7 +79,7 @@ void loop() {
   int sumMix = 0;
 
   // Read sensors and handle on/off
-  
+
   //----------------------------------
   // Read the analog pins
   for (int i = 0; i < NUM_FINGERS ; i++) {
