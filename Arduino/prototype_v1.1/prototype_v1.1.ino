@@ -2,10 +2,10 @@
 #include <Adafruit_NeoPixel.h>
 #define NUMPIXELS      3 // number of neopixels in strip
 
-int indexPin = 5;
-int middlePin = 4;
-int ringPin = 3;
-int pinkyPin = 2;
+int indexPin = 3;
+int middlePin = 6;
+int ringPin = 9;
+int pinkyPin = 12;
 
 // Adafruit class for a neopixles
 Adafruit_NeoPixel index = Adafruit_NeoPixel(NUMPIXELS, indexPin, NEO_GRB + NEO_KHZ800);
@@ -61,6 +61,9 @@ long redColor;
 long greenColor;
 long blueColor;
 
+// test
+
+int sum;
 
 void setup() {
 
@@ -76,12 +79,22 @@ void setup() {
   sensorTresholdRing = analogRead(ringSensor);
   sensorTresholdPinky = analogRead(pinkySensor);
 
-  for (int i = 1; i < NUM_FINGERS;  i++) {
+  Serial.println(sensorTresholdThumb);
+  Serial.println(sensorTresholdIndex);
+  Serial.println(sensorTresholdMiddle);
+  Serial.println(sensorTresholdRing);
+  Serial.println(sensorTresholdPinky);
+
+  for (int i = 0; i < NUM_FINGERS;  i++) {
     tresholdArray[i] = analogRead(i);
   };
 }
+
 void loop() {
 
+  Serial.println(analogRead(1));
+
+  int sum = 0;
   int redColor = 0;
   int greenColor = 0;
   int blueColor = 0;
@@ -94,14 +107,16 @@ void loop() {
   for (int i = 0; i < NUM_FINGERS ; i++) {
     // bestem hvad der er on eller off
     //Serial.println("analogs: ");
-    Serial.println(analogRead(i));
+    //Serial.println(analogRead(i));
     if (analogRead(i) < tresholdArray[i]) {
       fingers[i] = 1;
+      sum ++;
     }
     else {
       fingers[i] = 0;
     }
   }
+  //Serial.println(sum);
 
   //---------------------------------
 
@@ -137,16 +152,17 @@ void loop() {
     redColor = redColor * (255.0 / sumMix);
     greenColor = greenColor * (255.0 / sumMix);
     blueColor = blueColor * (255.0 / sumMix);
-    Serial.print("finger: ");
-    Serial.println(i);
-    Serial.println(redColor);
-    Serial.println(greenColor);
-    Serial.println(blueColor);
+    //    Serial.print("finger: ");
+    //    Serial.println(i);
+    //    Serial.println(redColor);
+    //    Serial.println(greenColor);
+    //    Serial.println(blueColor);
 
     for (int j = 0; j < NUMPIXELS; j ++) {
-
-      hand[i - 1].setPixelColor(j, redColor, greenColor, blueColor);
-      hand[i - 1].show();
+      if (fingers[i]) {
+        hand[i - 1].setPixelColor(j, redColor, greenColor, blueColor);
+        hand[i - 1].show();
+      }
     }
   }
 }
