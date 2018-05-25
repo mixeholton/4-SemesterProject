@@ -40,13 +40,19 @@ int test[4][3] = {
   {255, 255, 255}
 };
 
-// Kan ikke fastsættes pga. forskellige håndstørrelse,
-// så den skal laves om senere.... nu er den bare 580
-
+int sensorTresholdThumb;
 int sensorTresholdIndex;
 int sensorTresholdMiddle;
 int sensorTresholdRing;
 int sensorTresholdPinky;
+
+int tresholdArray[] = {
+  sensorTresholdThumb,
+  sensorTresholdIndex,
+  sensorTresholdMiddle,
+  sensorTresholdRing,
+  sensorTresholdPinky
+};
 
 //-----------------------------
 
@@ -64,13 +70,16 @@ void setup() {
   ring.begin();
   pinky.begin();
 
+  sensorTresholdThumb = analogRead(thumbSensor);
   sensorTresholdIndex = analogRead(indexSensor);
   sensorTresholdMiddle = analogRead(middleSensor);
   sensorTresholdRing = analogRead(ringSensor);
   sensorTresholdPinky = analogRead(pinkySensor);
 
+  for (int i = 1; i < NUM_FINGERS;  i++) {
+    tresholdArray[i] = analogRead(i);
+  };
 }
-
 void loop() {
 
   int redColor = 0;
@@ -86,7 +95,7 @@ void loop() {
     // bestem hvad der er on eller off
     //Serial.println("analogs: ");
     Serial.println(analogRead(i));
-    if (analogRead(i) < sensorTreshold) {
+    if (analogRead(i) < tresholdArray[i]) {
       fingers[i] = 1;
     }
     else {
@@ -258,7 +267,7 @@ void loop() {
 //    analogWrite(blueLED_RGB_Green, 0);
 //    analogWrite(blueLED_RGB_Blue, 0);
 //  }
-}
+
 
 //
 //void setColorMix(int redValue, int greenValue, int blueValue) {
