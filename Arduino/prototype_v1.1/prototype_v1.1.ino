@@ -35,10 +35,12 @@ int fingers[] = {finger0, finger1, finger2, finger3, finger4};
 
 int test[4][3] = {
   {255, 0, 0},
-  {127, 127, 0},
+  {0, 255, 0},
   {0, 0, 255},
   {255, 255, 255}
 };
+
+int offSet = 25;
 
 int sensorTresholdThumb;
 int sensorTresholdIndex;
@@ -79,20 +81,21 @@ void setup() {
   sensorTresholdRing = analogRead(ringSensor);
   sensorTresholdPinky = analogRead(pinkySensor);
 
+
+
+  for (int i = 0; i < NUM_FINGERS;  i++) {
+    tresholdArray[i] = analogRead(i) + offSet;
+  };
   Serial.println(sensorTresholdThumb);
   Serial.println(sensorTresholdIndex);
   Serial.println(sensorTresholdMiddle);
   Serial.println(sensorTresholdRing);
   Serial.println(sensorTresholdPinky);
-
-  for (int i = 0; i < NUM_FINGERS;  i++) {
-    tresholdArray[i] = analogRead(i);
-  };
 }
 
 void loop() {
 
-  Serial.println(analogRead(1));
+  //  Serial.println(analogRead(4));
 
   int sum = 0;
   int redColor = 0;
@@ -106,9 +109,11 @@ void loop() {
   // Read the analog pins
   for (int i = 0; i < NUM_FINGERS ; i++) {
     // bestem hvad der er on eller off
-    //Serial.println("analogs: ");
-    //Serial.println(analogRead(i));
-    if (analogRead(i) < tresholdArray[i]) {
+    Serial.print("analogs pin nummer: ");
+    Serial.println(analogRead(i));
+    Serial.println(tresholdArray[i]);
+    delay(100);
+    if (analogRead(i) > tresholdArray[i]) {
       fingers[i] = 1;
       sum ++;
     }
@@ -116,7 +121,8 @@ void loop() {
       fingers[i] = 0;
     }
   }
-  //Serial.println(sum);
+  Serial.print("sum here:");
+  Serial.println(sum);
 
   //---------------------------------
 
@@ -138,31 +144,33 @@ void loop() {
   }
   for (int i = 1; i < NUM_FINGERS ; i++) {
     // for hver finger der ikke er tommel:
-
-    // når tommelen ikke er løftet skal de have normale farver.
-    if (!fingers[0]) {
-      redColor = test[i - 1][0];
-      greenColor = test[i - 1][1];
-      blueColor = test[i - 1][2];
-    }
-    sumMix = redColor + blueColor + greenColor;
-
-    // her normaliseres værdierne så hvis de ikke er kun en farve
-    // så får de den korrekte lysintensitet
-    redColor = redColor * (255.0 / sumMix);
-    greenColor = greenColor * (255.0 / sumMix);
-    blueColor = blueColor * (255.0 / sumMix);
-    //    Serial.print("finger: ");
-    //    Serial.println(i);
-    //    Serial.println(redColor);
-    //    Serial.println(greenColor);
-    //    Serial.println(blueColor);
-
-    for (int j = 0; j < NUMPIXELS; j ++) {
-      if (fingers[i]) {
-        hand[i - 1].setPixelColor(j, redColor, greenColor, blueColor);
-        hand[i - 1].show();
+    
+      // når tommelen ikke er løftet skal de have normale farver.
+      if (!fingers[0] ) {
+        redColor = test[i - 1][0];
+        greenColor = test[i - 1][1];
+        blueColor = test[i - 1][2];
       }
+      sumMix = redColor + blueColor + greenColor;
+
+      // her normaliseres værdierne så hvis de ikke er kun en farve
+      // så får de den korrekte lysintensitet
+      redColor = redColor * (255.0 / sumMix);
+      greenColor = greenColor * (255.0 / sumMix);
+      blueColor = blueColor * (255.0 / sumMix);
+      //    Serial.print("finger: ");
+      //    Serial.println(i);
+      //    Serial.println(redColor);
+      //    Serial.println(greenColor);
+      //    Serial.println(blueColor);
+
+      for (int j = 0; j < NUMPIXELS; j ++) {
+
+        hand[i - 1].setPixelColor(j, redColor*fingers[i], greenColor*fingers[i], blueColor*fingers[i]);
+        hand[i - 1].show();
+      
+
+
     }
   }
 }
