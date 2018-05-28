@@ -9,8 +9,8 @@ int IndexT = 980;
 int MiddleT = 950;
 int RingT = 940;
 int PinkyT = 940;
-int finger2, finger3, finger4, finger5;
-int start2, start3, start4, start5; 
+int finger1, finger2, finger3, finger4, finger5;
+int start1, start2, start3, start4, start5; 
 
 Adafruit_NeoPixel index = Adafruit_NeoPixel(NUMPIXELS, indexPin, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel middle = Adafruit_NeoPixel(NUMPIXELS, middlePin, NEO_GRB + NEO_KHZ800);
@@ -30,6 +30,7 @@ void setup() {
     ring.setPixelColor(i, 0, 0, 0);
     pinky.setPixelColor(i, 0, 0, 0);
   }
+  start1 = analogRead(0);
   start2 = analogRead(1); 
   start3 = analogRead(2);
   start4 = analogRead(3);
@@ -38,29 +39,30 @@ void setup() {
 
 void loop() {
 
-  turnoffMiddle(); 
-  turnoffRing(); 
-  turnoffPinky(); 
   Serial.println(start2); 
   delay(1000); 
+
+  finger1 = analogRead(0);
+  Serial.print("thumbfinger: ");
+  Serial.println(finger1);
 
   finger2 = analogRead(1);
   Serial.print("indexfinger: ");
   Serial.println(finger2);
 
-//  finger3 = analogRead(2);
-//  Serial.print("middlefinger: ");
-//  Serial.println(finger3);
+  finger3 = analogRead(2);
+  Serial.print("middlefinger: ");
+  Serial.println(finger3);
 
 
   finger4 = analogRead(3);
-  //Serial.print("ringfinger: ");
-  //Serial.println(finger4);
+  Serial.print("ringfinger: ");
+  Serial.println(finger4);
 
 
   finger5 = analogRead(4);
-  //Serial.print("pinkyfinger: ");
-  //Serial.println(finger5);
+  Serial.print("pinkyfinger: ");
+  Serial.println(finger5);
 
   if (finger2 > start2+10) {
     turnoffIndex();
@@ -68,23 +70,23 @@ void loop() {
     lightIndexFinger();
   }
 
-//  if (finger3 > start3) {
-//    turnoffMiddle();
-//  } else {
-//    lightMiddleFinger();
-//  }
-//
-//  if (finger4 < RingT) {
-//    turnoffRing();
-//  } else {
-//    lightRingFinger();
-//  }
-//
-//  if (finger5 < PinkyT) {
-//    turnoffPinky();
-//  } else {
-//    lightPinkyFinger();
-//  }
+  if (finger3 > start3+10) {
+    turnoffMiddle();
+  } else {
+    lightMiddleFinger();
+  }
+
+  if (finger4 > start4+10) {
+    turnoffRing();
+  } else {
+    lightRingFinger();
+  }
+
+  if (finger5 > start5+10) {
+    turnoffPinky();
+  } else {
+    lightPinkyFinger();
+  }
 
 
 }
