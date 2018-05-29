@@ -40,22 +40,22 @@ int test[4][3] = {
   {0, 255, 0}
 };
 
-int offSet = 1000;
 
-int sensorTresholdThumb;
-int sensorTresholdIndex;
-int sensorTresholdMiddle;
-int sensorTresholdRing;
-int sensorTresholdPinky;
+int sensorThresholdThumb;
+int sensorThresholdIndex;
+int sensorThresholdMiddle;
+int sensorThresholdRing;
+int sensorThresholdPinky;
 
-int tresholdArray[] = {
-  sensorTresholdThumb,
-  sensorTresholdIndex,
-  sensorTresholdMiddle,
-  sensorTresholdRing,
-  sensorTresholdPinky
+int thresholdArray[] = {
+  sensorThresholdThumb,
+  sensorThresholdIndex,
+  sensorThresholdMiddle,
+  sensorThresholdRing,
+  sensorThresholdPinky
 };
 
+int threshold = 1015;
 //-----------------------------
 
 // sættes for referencens skyld
@@ -75,27 +75,18 @@ void setup() {
   ring.begin();
   pinky.begin();
 // Kan indsætte offSet
-  sensorTresholdThumb = analogRead(thumbSensor);
-  sensorTresholdIndex = analogRead(indexSensor);
-  sensorTresholdMiddle = analogRead(middleSensor);
-  sensorTresholdRing = analogRead(ringSensor);
-  sensorTresholdPinky = analogRead(pinkySensor);
-
-
 
   for (int i = 0; i < NUM_FINGERS;  i++) {
-    tresholdArray[i] = analogRead(i);
+    thresholdArray[i] = analogRead(i);
+    thresholdArray[i] = threshold;
+    if(i == 0){
+    thresholdArray[i] -= 15;  
+      }
   };
- // Serial.println(sensorTresholdThumb) + offSet;
-  //Serial.println(sensorTresholdIndex) + offSet;
-  //Serial.println(sensorTresholdMiddle) + offSet;
-  //Serial.println(sensorTresholdRing) + offSet;
-  //Serial.println(sensorTresholdPinky) + offSet;
+  
 }
 
 void loop() {
-
-  //  Serial.println(analogRead(4));
 
   int sum = 0;
   int redColor = 0;
@@ -112,9 +103,9 @@ void loop() {
     Serial.print("analogs pin nummer: ");
     Serial.println(i);
     Serial.println(analogRead(i));
-    Serial.println(tresholdArray[i]);
+    Serial.println(thresholdArray[i]);
     delay(100);
-    if (analogRead(i) < tresholdArray[i]) {
+    if (analogRead(i) < thresholdArray[i]) {
       fingers[i] = 1;
       sum ++;
     }
@@ -127,7 +118,7 @@ void loop() {
 
   //---------------------------------
 
-  if (fingers[0]) {
+  if (!fingers[0]) {
 
     // nu skal farverne blandes
 
@@ -147,7 +138,7 @@ void loop() {
     // for hver finger der ikke er tommel:
     
       // når tommelen ikke er løftet skal de have normale farver.
-      if (!fingers[0] ) {
+      if (fingers[0] ) {
         redColor = test[i - 1][0];
         greenColor = test[i - 1][1];
         blueColor = test[i - 1][2];
