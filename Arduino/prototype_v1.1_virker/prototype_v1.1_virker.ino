@@ -115,7 +115,6 @@ void loop() {
     }
   }
 
-  redColor = 1000 * (255.0 / 3000)
   for (int i = 1; i < NUM_FINGERS ; i++) {
     // check if the thumb is in the palm
     if (fingers[0] ) {
