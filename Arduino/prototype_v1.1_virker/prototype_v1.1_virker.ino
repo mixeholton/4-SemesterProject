@@ -3,16 +3,16 @@
 #define NUMPIXELS      3 // number of neopixels in strip
 
 int indexPin = 3;
+int middlePin = 6;
+int ringPin = 9;
+int pinkyPin = 12;
 
-// Adafruit class for a neopixles
 Adafruit_NeoPixel index = Adafruit_NeoPixel(NUMPIXELS, indexPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel middle = Adafruit_NeoPixel(NUMPIXELS, middlePin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel ring = Adafruit_NeoPixel(NUMPIXELS, ringPin, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pinky = Adafruit_NeoPixel(NUMPIXELS, pinkyPin, NEO_GRB + NEO_KHZ800);
 
-index.begin();
-
-index.setPixelColor(2, 255, 255, 255);
-// this is neopixle syntax
-index.show();
-
+Adafruit_NeoPixel hand[] = {index, middle, ring, pinky};
 
 // -----------------------------
 
