@@ -33,10 +33,10 @@ bool finger4 = 0;
 int fingers[] = {finger0, finger1, finger2, finger3, finger4};
 
 int fingerBaseColor[4][3] = {
-  {255, 0, 0},
-  {127, 127, 0},
-  {0, 0, 255},
-  {0, 255, 0}
+  {255, 0, 0}, // red 
+  {127, 127, 0}, // gul
+  {0, 0, 255}, // blue
+  {0, 255, 0} // grøn
 };
 
 
@@ -60,7 +60,7 @@ int threshold = 1015;
 // longs are used to make sure there is no overflow
 long redColor;
 long greenColor;
-long blueColor;
+long blueColor; 
 
 void setup() {
   Serial.begin(9600);
@@ -83,9 +83,9 @@ void setup() {
 
 void loop() {
 
-  int redColor = 0;
-  int greenColor = 0;
-  int blueColor = 0;
+  redColor = 0;
+  greenColor = 0;
+  blueColor = 0;
   int sumMix = 0;
 
   // Read sensors and handle on/off
@@ -102,17 +102,16 @@ void loop() {
     }
   }
 
-  // if the thumb is strechted
-  if (!fingers[0]) {
+    if (!fingers[0]) {
     // loop starts at 1 because of the thumb
     for (int i = 1; i < NUM_FINGERS; i++) {
       if (fingers[i]) {
         // subtracting i with 1 to make sure the it corresponds to the colors from the 2d array
-        redColor += fingerBaseColor[i - 1][0];
-        greenColor += fingerBaseColor[i - 1][1];
+        redColor += fingerBaseColor[i - 1][0]; 
+        greenColor += fingerBaseColor[i - 1][1]; 
         blueColor += fingerBaseColor[i - 1][2];
       }
-    }
+    } 
   }
 
   for (int i = 1; i < NUM_FINGERS ; i++) {
@@ -123,7 +122,7 @@ void loop() {
       blueColor = fingerBaseColor[i - 1][2];
     }
     sumMix = redColor + blueColor + greenColor;
-
+    
     // the colors get normalized if there is more than 1 active finger
     // sumMix increases af more colors are selected
     redColor = redColor * (255.0 / sumMix);
